@@ -7,32 +7,26 @@ export default class Application extends EventEmitter {
       READY: "ready",
     };
   }
-
   constructor() {
     super();
-
+    
+    this._beat = new Beat()
     const lyrics = ["Ah", "ha", "ha", "ha", "stayin' alive", "stayin' alive"];
     let count = 0;
-
-    this._beat = new Beat();
-
-    this._beat.addEventListener(Beat.events.BIT, () => {
-      this._create(lyrics[count]);
+    
+    this._beat.addListener(Beat.events.BIT, (e) => {
+      count %= 6;
+      this._create(lyrics[count])
       count++;
-      if (count === lyrics.length) {
-        count = 0;
-      }
-    });
-
+    })
+  
     this.emit(Application.events.READY);
   }
 
-  _create(lyric) {
-
+  _create(mes) {
     const message = document.createElement("div");
     message.classList.add("message");
-    message.innerText = "Ah";
-
+    message.innerText = mes;
     document.querySelector(".main").appendChild(message);
   }
 
